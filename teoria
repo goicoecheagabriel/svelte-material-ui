@@ -1,0 +1,78 @@
+GUIA DE INSTALACION DE SVELTE PARA QUE FUNCIONE SVELTE-MATERIAL-UI
+    Bibliografia y enlaces de interes
+        Video paso a paso para realizar la instalacion descripta mas abajo
+            --> https://youtu.be/k9hyeORWSTA
+        Pagina oficial de svelte
+            --> https://svelte.dev/
+        Pagina del proyecto svelte-material-ui (github)
+            --> https://github.com/hperrin/svelte-material-ui
+        Pagina con los componentes y ayudas de codigo de svelte-material-ui
+            --> https://sveltematerialui.com/
+        
+
+Primero instalamos svelte con el comando
+    --> npx degit sveltejs/template svelte-smui
+
+Luego instalamos la libreria de material-ui
+    --> npm i --save-dev svelte-material-ui
+
+Luego instalamos path
+    --> npm i --save-dev path
+
+Instalamos sass
+    --> npm i --save-dev node-sass
+
+Instalamos rollup postcss
+    --> npm i --save-dev rollup-plugin-postcss
+
+Realizamos una instalacion general
+    --> npm install
+
+Agregamos en rollup.config.js la siguiente configuracion
+    Primero importamos path
+        --> import path from 'path';
+    
+    Luego importamos postcss
+        --> import postcss from 'rollup-plugin-postcss';
+
+    Luego de la linea "const production = !process.env.ROLLUP_WATCH;" agregamos el siguiente codigo
+        
+        const postcssOption = () => ({
+            extensions:['.scss', '.sass'],
+            extract: false,
+            minimize:true,
+            use: [
+                ['sass', {
+                    includePaths: [
+                        './src/theme',
+                        './node_modules',
+                        // This is only needed because we're using a local mo...
+                        // Normally, you would not need this line.
+                        path.resolve(__dirname, '..', 'node_modules')
+                    ]
+                }]
+            ]
+        })
+
+    En plugins luego de svelte agregamos el siguiente plugins
+        --> postcss(postcssOption()),
+
+
+En la carpeta src agregamos una carpeta para themes y dentro un archivo nuevo. Quedando de la siguiente manera
+    --> src
+         |--theme
+            |--_smui-theme.scss
+    
+    Una vez creado el archiv scss solo se cierra. Notar que el nombre comienza con guion bajo "_"
+
+
+Ejecutamos la aplicacion para verificar que no existen errores y que la misma es desplegada con el siguiente comando
+    --> npm run dev
+
+
+Abrimos el componente App.svelte 
+    --> realizamos el import de un componente de tipo Button de la siguiente manera en la seccion de <script>
+        --> import Button from '@smui/button';
+    
+    --> agregamos en el area del <main> un componente de tipo Button de la siguiente manera
+        --> <Button on:click={() => alert('clicked!')}>Just a Button</Button>
